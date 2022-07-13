@@ -28,4 +28,4 @@ pillow==9.0.0 ; python_version > "3.6"
 av==8.0.3; platform_machine !=  "aarch64"
 decord==0.4.2; platform_machine !=  "aarch64"
 SimpleITK; platform_machine !=  "aarch64"
-
+requests==2.28.1
