@@ -18,18 +18,14 @@ import sys
 import numpy as np
 
 client = Client()
-client.load_client_config(sys.argv[1])
-client.connect(["127.0.0.1:9393"])
+#client.load_client_config(sys.argv[1])
+client.load_client_config("uci_housing_client/serving_client_conf.prototxt")
+client.connect(["0.0.0.0:8080"])
 fetch_list = client.get_fetch_names()
-import paddle
-test_reader = paddle.batch(
-    paddle.reader.shuffle(
-        paddle.dataset.uci_housing.test(), buf_size=500),
-    batch_size=1)
+data = [0.0137, -0.1136, 0.2553, -0.0692, 0.0582, -0.0727,
+        -0.1583, -0.0584, 0.6283, 0.4919, 0.1856, 0.0795, -0.0332]
 
-for data in test_reader():
-    new_data = np.zeros((1, 13)).astype("float32")
-    new_data[0] = data[0][0]
-    fetch_map = client.predict(
-        feed={"x": new_data}, fetch=fetch_list, batch=True)
+for i in range(10):
+    new_data = np.random.rand(1, 13).astype("float32")
+    fetch_map = client.predict(feed={"x": new_data}, fetch=fetch_list)
     print(fetch_map)
