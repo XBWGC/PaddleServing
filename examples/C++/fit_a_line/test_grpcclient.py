@@ -16,6 +16,7 @@
 from paddle_serving_client import Client
 import sys
 import numpy as np
+np.random.seed(2022)
 
 client = Client()
 #client.load_client_config(sys.argv[1])

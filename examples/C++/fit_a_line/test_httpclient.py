@@ -17,9 +17,10 @@ from paddle_serving_client.httpclient import HttpClient
 import sys
 import numpy as np
 import time
+np.random.seed(2022)
 
 client = HttpClient()
-client.load_client_config(sys.argv[1])
+client.load_client_config("uci_housing_client/serving_client_conf.prototxt")
 ''' 
 if you want use GRPC-client, set_use_grpc_client(True)
 or you can directly use client.grpc_client_predict(...)
@@ -41,18 +42,11 @@ we recommend use Proto data format in HTTP-body, set True(which is default)
 if you want use JSON data format in HTTP-body, set False
 '''
 #client.set_http_proto(True)
-client.connect(["127.0.0.1:9393"])
+client.connect(["127.0.0.1:8080"])
 fetch_list = client.get_fetch_names()
 
-import paddle
-test_reader = paddle.batch(
-    paddle.reader.shuffle(
-        paddle.dataset.uci_housing.test(), buf_size=500),
-    batch_size=1)
-for data in test_reader():
-    new_data = np.zeros((1, 13)).astype("float32")
-    new_data[0] = data[0][0]
+for i in range(10):
+    new_data = np.random.rand(1, 13).astype("float32")
     fetch_map = client.predict(
         feed={"x": new_data}, fetch=fetch_list, batch=True)
     print(fetch_map)
-    break
